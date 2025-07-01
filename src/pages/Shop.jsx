@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import axios from "axios";
 import ProductCard from "../components/ProductCard";
 
 const PRODUCTS_PER_PAGE = 6;
@@ -18,37 +17,46 @@ const Shop = () => {
   const endIndex = startIndex + PRODUCTS_PER_PAGE;
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
-        setProducts(data);
-      } catch (error) {
-        console.error("❌ Failed to fetch products:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+    // Always use hardcoded products
+    const fallbackProducts = [
+      {
+        _id: "1",
+        title: "Toyota Corolla 2023",
+        price: 4200000,
+        category: "Sedan",
+        image: "https://images.pexels.com/photos/20867335/pexels-photo-20867335.jpeg",
+      },
+      {
+        _id: "2",
+        title: "Honda Civic 2022",
+        price: 4800000,
+        category: "Sedan",
+        image: "https://images.pexels.com/photos/16475132/pexels-photo-16475132.jpeg",
+      },
+      {
+        _id: "3",
+        title: "Toyota V8 2023",
+        price: 39000000,
+        category: "SUV",
+        image: "https://www.shutterstock.com/shutterstock/photos/2051104811/display_1500/stock-photo-st-petersburg-russia-august-toyota-land-cruiser-series-restyling-front-view-2051104811.jpg",
+      },
+    ];
+    setProducts(fallbackProducts);
+    setLoading(false);
   }, []);
 
-  // Filter logic (memoized)
   const filteredProducts = useMemo(() => {
     let result = [...products];
-
     if (category) {
       result = result.filter(
         (p) => p.category?.toLowerCase() === category.toLowerCase()
       );
     }
-
     if (searchQuery) {
       result = result.filter((p) =>
         p.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
     return result;
   }, [products, category, searchQuery]);
 
