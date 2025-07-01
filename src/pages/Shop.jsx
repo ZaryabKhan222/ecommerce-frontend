@@ -21,7 +21,7 @@ const Shop = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get("http://localhost:5000/api/products");
+        const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         setProducts(data);
       } catch (error) {
         console.error("❌ Failed to fetch products:", error.message);
